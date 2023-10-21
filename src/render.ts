@@ -1,7 +1,7 @@
 import {
   jsonNode,
   jsonNodeProps,
-} from "../demos/types";
+} from "./types";
 import {
   RenderTypeDefs,
 } from "./typeHelper";

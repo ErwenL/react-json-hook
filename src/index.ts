@@ -11,4 +11,7 @@ export {
 } from "./render"
 export type {
   jsonNode,
-} from "../demos/types"
+  jsonNodeProps,
+  nodeBaseType,
+  renderJsonNodeProps,
+} from "./types"

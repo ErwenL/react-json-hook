@@ -2,12 +2,11 @@
 import {
   jsonNode,
   jsonNodeProps,
-  nodeBaseType,
   renderJsonNodeProps,
-} from "../types";
-import { createRenderTypeHelper, RenderTypeDefs } from "../typeHelper";
+  createRenderTypeHelper,
+  RenderTypeDefs
+} from "../../src";
 import React from "react";
-import { ChevronRightIcon } from "@heroicons/react/24/outline";
 
 const INDENT = 16;
 
@@ -41,20 +40,26 @@ const InternalNodeRender: React.FC<renderJsonNodeProps<jsonNode>> = (
       >
         {props.degree === 0 && (
           <div className="mx-1 rounded-sm text-slate-500 outline-1 group-hover:outline">
-            <ChevronRightIcon className="h-3 w-3" />
+            <svg 
+              className="w-3 h-3"
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
           </div>
         )}
         {props.degree > 0 && (
           <button
-            title="toggle_node"
+            title="toggle_branch"
             className="mx-1 rounded-sm text-pink-400 outline-1 group-hover:outline"
             onClick={props.folded ? props.unfoldBranch : props.foldBranch}
           >
-            <ChevronRightIcon
-              className={`h-3 w-3 ${
-                !props.folded ? "rotate-90 transform" : ""
-              }`}
-            />
+            <svg 
+              className={`w-3 h-3 ${ !props.folded ? "rotate-90 transform" : "" }`}
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" 
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
           </button>
         )}
         <div className="w-fit">
@@ -116,7 +121,7 @@ const renderTypeDefs = new RenderTypeDefs([
   }),
   renderTypeHelper.boolean({
     valueRender: (props) => (
-      <span className="font-serif text-sm text-slate-500 group-hover:text-sky-400">
+      <span className="font-serif text-sm text-violet-400 group-hover:text-sky-400">
         {props.value.toString()}
       </span>
     ),

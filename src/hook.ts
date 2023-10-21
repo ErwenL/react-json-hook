@@ -7,11 +7,11 @@ import {
   useJsonNodeProps,
   useJsonNodePropsWithType,
   jsonNodeProps,
-} from "../demos/types";
+} from "./types";
 import { RenderTypeDefs } from "./typeHelper";
 import { useCallback, useMemo, useState } from "react";
 
-export const useJson = <T extends jsonNode>(
+export const useJson = <T extends jsonNode = jsonNode>(
   value: T,
   renderTypeDefs: RenderTypeDefs,
 ) =>

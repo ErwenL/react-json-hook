@@ -12,7 +12,7 @@ import {
   renderJsonNodeProps,
   renderTypeDef,
   renderTypeDefProps,
-} from "../demos/types";
+} from "./types";
 
 export type renderTypeHelper = {
   string: (props: renderTypeDefProps<string>) => renderTypeDef<string>;
