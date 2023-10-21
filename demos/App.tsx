@@ -1,5 +1,5 @@
 import { useState } from "react";
-import reactLogo from "/react.svg";
+import reactLogo from "./assets/react.svg";
 import { useJson, nodeRender, RenderTypeDefs } from "../src";
 import sampleData from "./data/base.json";
 import baseRenderTypeDefs from "./renderTypeDefs/default";
@@ -18,45 +18,44 @@ function App() {
 
   return (
     <>
-      <div className="flex h-screen flex-col gap-4 items-center">
+      <div className="flex h-screen flex-col items-center gap-4">
         {/* logo */}
-        <div className="flex items-center mt-10">
+        <div className="mt-10 flex items-center">
           <img
-            className="h-24 p-4 animate-spin"
+            className="h-24 animate-spin p-4"
             style={{ animationDuration: "5s" }}
             src={reactLogo}
             alt="React logo"
           />
           <h1 className="pr-6">React-Json-Hook</h1>
         </div>
-        {/* selector */}
-        <div className="flex items-center hover:outline outline-sky-500 p-2 rounded-lg duration-150 ease-in-out">
-          <span className="px-2 font-bold font-mono text-sky-400">
+        {/* render type defs selector */}
+        <div className="group flex items-center rounded-lg p-2 outline-sky-500 duration-150 ease-in-out hover:outline group-focus-within:outline">
+          <label className="px-2 font-mono font-bold text-sky-400">
             renderTypeDefs:
-          </span>
+          </label>
           <select
-            className="px-2 font-mono text-slate-200 bg-transparent outline-none "
+            id="renderTypeDefsSelector"
+            name="renderTypeDefsSelector"
+            className="bg-transparent px-2 font-mono text-slate-200 outline-none "
             value={renderTypeDefsChoice}
             onChange={(e) => {
               setRenderTypeDefsChoice(e.target.value);
             }}
+            
           >
             {Object.keys(renderTypeDefsOptions).map((key) => (
-              <option
-                className="text-slate-500 bg-slate-900 "
-                key={key}
-                value={key}
-              >
+              <option className="bg-slate-900" key={key} value={key}>
                 {key}
               </option>
             ))}
           </select>
         </div>
         {/* json Viewer */}
-        <div className="flex flex-col-1 w-full justify-center overflow-auto mb-4">
-          <div className="w-3/4 max-w-xl h-fit max-h-full whitespace-nowrap overflow-auto bg-gray-950/40 p-4 rounded-xl shadow-md">
+        <div className="flex-col-1 mb-4 flex w-full justify-center overflow-auto">
+          <div className="h-fit max-h-full w-3/4 max-w-xl overflow-auto whitespace-nowrap rounded-xl bg-gray-950/40 p-4 shadow-md">
             {root.renderPropsArray!().map((props) =>
-              nodeRender(props, renderTypeDefs)
+              nodeRender(props, renderTypeDefs),
             )}
           </div>
         </div>

@@ -1,4 +1,3 @@
-"use client";
 import {
   jsonNode,
   jsonNodeProps,
@@ -94,7 +93,7 @@ const renderTypeDefs = new RenderTypeDefs([
     valueRender: (props) => (
       <span style={{ color: "white", paddingLeft: 8 }}>{props.value}</span>
     ),
-    keyRender: (props) => <></>,
+    keyRender: (_props) => <></>,
   }),
   renderTypeHelper.string({
     valueRender: (props) => (
@@ -112,7 +111,7 @@ const renderTypeDefs = new RenderTypeDefs([
     ),
   }),
   renderTypeHelper.null({
-    valueRender: (props) => <span style={{ color: "gray" }}>null</span>,
+    valueRender: (_props) => <span style={{ color: "gray" }}>null</span>,
   }),
   renderTypeHelper.array({
     getEndNodeProps: (props) => {

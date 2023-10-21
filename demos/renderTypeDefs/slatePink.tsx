@@ -1,4 +1,3 @@
-"use client";
 import {
   jsonNode,
   jsonNodeProps,
@@ -127,7 +126,7 @@ const renderTypeDefs = new RenderTypeDefs([
     ),
   }),
   renderTypeHelper.null({
-    valueRender: (props) => (
+    valueRender: (_props) => (
       <span className="font-serif text-sm text-slate-500">null</span>
     ),
   }),

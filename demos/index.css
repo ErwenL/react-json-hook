@@ -12,3 +12,7 @@
     @apply text-4xl font-bold text-blue-200;
   }
 }
+
+select.decorated option:hover {
+  box-shadow: 0 0 10px 100px blue inset;
+}
