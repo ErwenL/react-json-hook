@@ -8,7 +8,6 @@ import {
   jsonNodeProps,
   jsonNodeRender,
   jsonKeyRender,
-  jsonValueRender,
   renderJsonNodeProps,
   renderTypeDef,
   renderTypeDefProps,
@@ -36,7 +35,7 @@ export function createRenderTypeHelper(
       return {
         name: baseType,
         baseType: (baseType as nodeBaseType<TNode>),
-        isType: (nodeprops: useJsonNodeProps<TNode>) => true,
+        isType: (_nodeprops: useJsonNodeProps<TNode>) => true,
         getRenderPropsArray: (nodeprops:jsonNodeProps<TNode>) => [nodeprops],
         nodeRender: (nodeProps: renderJsonNodeProps<TNode>) => nodeRender({
           renderJsonValue: props.valueRender,
@@ -53,7 +52,7 @@ export function createRenderTypeHelper(
       return {
         name: baseType,
         baseType: (baseType as nodeBaseType<TNode>),
-        isType: (nodeprops: useJsonNodeProps<TNode>) => true,
+        isType: (_nodeprops: useJsonNodeProps<TNode>) => true,
         getRenderPropsArray: (nodeprops:jsonNodeProps<TNode>) => {
           const propsArray: jsonNodeProps[] = []
           propsArray.push(nodeprops)
@@ -100,7 +99,7 @@ export class RenderTypeDefs {
     const typeDefCounts = typeNames.map( typeName => {
       return typeDefs.filter( typeDef => typeDef.name===typeName).length
     })
-    const duplicateTypeNames = typeNames.filter( (typeName, index) => typeDefCounts[index]>1)
+    const duplicateTypeNames = typeNames.filter( (_typeName, index) => typeDefCounts[index]>1)
     if (duplicateTypeNames.length>0) {
       console.warn(`duplicate render type Defs: ${duplicateTypeNames.join(",")}. Only the first will be used.`)
     }
