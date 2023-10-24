@@ -6,10 +6,12 @@ import dts from "vite-plugin-dts"
 export default defineConfig({
   build: {
     lib: {
-      entry: resolve(__dirname, "./src/index.ts"),
-      formats: ["es", "umd"],
-      name: "ReactJsonHook",
-      fileName: (format) => `index.${format}.js`
+      // entry: resolve(__dirname, "./src/index.ts"),
+      // formats: ["es", "umd"],
+      // name: "ReactJsonHook",
+      // fileName: (format) => `index.${format}.js`
+      entry: {index: resolve(__dirname, "./src/index.ts")},
+      formats: ["es"],
     },
     rollupOptions: {
       external: ['react', 'react-dom'],
@@ -23,6 +25,6 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    dts( {rollupTypes: true, insertTypesEntry: true})
+    dts( {rollupTypes: true, insertTypesEntry: true })
   ],
 })
