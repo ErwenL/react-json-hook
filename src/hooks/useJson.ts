@@ -6,9 +6,10 @@ import {
   useJsonNodeProps,
   useJsonNodePropsWithType,
   jsonNodeProps,
-} from "./types";
-import { RenderTypeDefs } from "./typeHelper";
-import { useCallback, useMemo, useState } from "react";
+} from "../types";
+import { RenderTypeDefs } from "../typeHelper";
+// import { useCallback, useMemo, useState } from "react";
+import React from "react";
 
 export const useJson = <T extends jsonNode = jsonNode>(
   value: T,
@@ -22,7 +23,7 @@ export const useJsonNode = <TNode extends jsonNode>(
 ): jsonNodeProps<TNode> => {
   const propsWidthType = useRenderTypeDefs(props, renderTypeDefs);
   const _props = useInternalNode(propsWidthType, renderTypeDefs);
-  _props.renderPropsArray = useCallback(
+  _props.renderPropsArray = React.useCallback(
     () =>
       renderTypeDefs.renderType(_props.renderType).getRenderPropsArray(_props),
     [_props, renderTypeDefs],
@@ -35,9 +36,9 @@ const useRenderTypeDefs = <TNode extends jsonNode>(
   props: useJsonNodeProps<TNode>,
   renderTypeDefs: RenderTypeDefs,
 ): useJsonNodePropsWithType<TNode> => {
-  const baseType = getJsonNodeBaseType(props.value);
+  const baseType = React.useMemo(() => getJsonNodeBaseType(props.value), [props]);
 
-  const validRenderTypes = useMemo(() => {
+  const validRenderTypes = React.useMemo(() => {
     const _validRenderTypes: string[] = [];
     renderTypeDefs.withBaseType(baseType).forEach((typeDef) => {
       if (typeDef.isType(props)) {
@@ -47,7 +48,7 @@ const useRenderTypeDefs = <TNode extends jsonNode>(
     return _validRenderTypes;
   }, [baseType, props, renderTypeDefs]);
 
-  const [renderType, setRenderType] = useState<string>(validRenderTypes[0]);
+  const [renderType, setRenderType] = React.useState<string>(validRenderTypes[0]);
 
   const cycleRenderType =
     validRenderTypes.length > 1
@@ -69,18 +70,16 @@ const useRenderTypeDefs = <TNode extends jsonNode>(
   };
 };
 
-interface useChildNodeProps<TNode extends jsonNode> extends Pick<useJsonNodeProps<TNode>, "value"|"nodeKey"|"id"> {}
-
 const useInternalNode = <TNode extends jsonNode>(
   props: useJsonNodePropsWithType<TNode>,
   renderTypeDefs: RenderTypeDefs,
 ): jsonNodeProps<TNode> => {
-  const [folded, setFolded] = useState<boolean>(true);
+  const [folded, setFolded] = React.useState<boolean>(true);
   const toggleFolded = () => {
     setFolded((prev) => !prev);
   };
 
-  const useChildNodePropsArray: useChildNodeProps<jsonNode>[] = [];
+  const useChildNodePropsArray: useJsonNodeProps<jsonNode>[] = [];
 
   if (props.baseType === "array") {
     (props.value as jsonArray).forEach((child, index) => {
@@ -88,93 +87,60 @@ const useInternalNode = <TNode extends jsonNode>(
         value: child,
         nodeKey: index.toString(),
         id: `${props.id}.${index.toString()}`,
-      })
-    })
+        level: props.level + 1,
+      });
+    });
   } else if (props.baseType === "object") {
     Object.keys(props.value as jsonObject).map((key) => {
       useChildNodePropsArray.push({
         value: (props.value as jsonObject)[key],
         nodeKey: key,
         id: `${props.id}.${key}`,
-      })
-    })
-  } 
+        level: props.level + 1,
+      });
+    });
+  }
 
-  const children: jsonNodeProps<jsonNode>[] = useChildNodePropsArray.map((childNodeProps) => 
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useJsonNode(
-      {
-      ...childNodeProps,
-      level: props.level + 1,
-    }, renderTypeDefs
-  ))
+  const children: jsonNodeProps<jsonNode>[] = useChildNodePropsArray.map(
+    (childNodeProps) =>
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useJsonNode(childNodeProps, renderTypeDefs),
+  );
 
-
-
-  // let children: jsonNodeProps<jsonNode>[] = [];
-
-  // if (props.baseType === "array") {
-  //   children = (props.value as jsonArray).map((child, index) =>
-  //     useJsonNode(
-  //       {
-  //         value: child,
-  //         nodeKey: index.toString(),
-  //         id: `${props.id}.${index.toString()}`,
-  //         level: props.level + 1,
-  //       },
-  //       renderTypeDefs,
-  //     ),
-  //   );
-  // } else if (props.baseType === "object") {
-  //   children = Object.keys(props.value as jsonObject).map((key) =>
-  //     useJsonNode(
-  //       {
-  //         value: (props.value as jsonObject)[key],
-  //         nodeKey: key,
-  //         id: `${props.id}.${key}`,
-  //         level: props.level + 1,
-  //       },
-  //       renderTypeDefs,
-  //     ),
-  //   );
-  // } else {
-  //   return { ...props, degree: 0, isLeaf: true };
-  // }
-
-  const isLeaf = useMemo(
+  const isLeaf = React.useMemo(
     () => !!(renderTypeDefs.renderType(props.renderType).isLeaf === true),
     [props.renderType, renderTypeDefs],
   );
 
-  const foldAllSubBranches = () => {
+  const foldAllSubBranches = !isLeaf ? () => {
     children.forEach((child) => {
       if (!child.isLeaf && typeof child.foldBranch === "function") {
         child.foldBranch();
       }
     });
-  };
+  } : undefined;
 
-  const foldBranch = () => {
-    foldAllSubBranches();
+  const foldBranch = !isLeaf ? () => {
+    foldAllSubBranches!();
     if (!folded) {
       setFolded(() => true);
     }
-  };
+  } : undefined ;
 
-  const unfoldAllSubBranches = () => {
+  const unfoldAllSubBranches = !isLeaf ? () => {
     children.forEach((child) => {
       if (!child.isLeaf && typeof child.unfoldBranch === "function") {
         child.unfoldBranch();
       }
     });
-  };
+  } : undefined;
 
-  const unfoldBranch = () => {
+  const unfoldBranch = !isLeaf ? () => {
     if (folded) {
       setFolded(() => false);
     }
-    unfoldAllSubBranches();
-  };
+    unfoldAllSubBranches!();
+  } : undefined;
 
   return {
     ...props,

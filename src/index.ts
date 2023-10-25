@@ -5,7 +5,7 @@ export {
 export {
   useJson,
   useJsonNode,
-} from "./hook"
+} from "./hooks/useJson"
 export {
   nodeRender
 } from "./render"
