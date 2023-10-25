@@ -25,12 +25,7 @@ export const useJsonNode = <TNode extends jsonNode>(
   _props.renderPropsArray = useCallback(
     () =>
       renderTypeDefs.renderType(_props.renderType).getRenderPropsArray(_props),
-    [
-      _props.renderType,
-      _props.folded,
-      _props.children?.map((child) => child.renderPropsArray),
-      renderTypeDefs,
-    ],
+    [_props, renderTypeDefs],
   );
 
   return _props;
@@ -50,7 +45,7 @@ const useRenderTypeDefs = <TNode extends jsonNode>(
       }
     });
     return _validRenderTypes;
-  }, [props.value, renderTypeDefs]);
+  }, [baseType, props, renderTypeDefs]);
 
   const [renderType, setRenderType] = useState<string>(validRenderTypes[0]);
 
@@ -74,6 +69,8 @@ const useRenderTypeDefs = <TNode extends jsonNode>(
   };
 };
 
+interface useChildNodeProps<TNode extends jsonNode> extends Pick<useJsonNodeProps<TNode>, "value"|"nodeKey"|"id"> {}
+
 const useInternalNode = <TNode extends jsonNode>(
   props: useJsonNodePropsWithType<TNode>,
   renderTypeDefs: RenderTypeDefs,
@@ -83,41 +80,70 @@ const useInternalNode = <TNode extends jsonNode>(
     setFolded((prev) => !prev);
   };
 
-  let children: jsonNodeProps<jsonNode>[] = [];
+  const useChildNodePropsArray: useChildNodeProps<jsonNode>[] = [];
 
   if (props.baseType === "array") {
-    children = (props.value as jsonArray).map((child, index) =>
-      useJsonNode(
-        {
-          value: child,
-          nodeKey: index.toString(),
-          id: `${props.id}.${index.toString()}`,
-          level: props.level + 1,
-        },
-        renderTypeDefs,
-      ),
-    );
+    (props.value as jsonArray).forEach((child, index) => {
+      useChildNodePropsArray.push({
+        value: child,
+        nodeKey: index.toString(),
+        id: `${props.id}.${index.toString()}`,
+      })
+    })
   } else if (props.baseType === "object") {
-    children = Object.keys(props.value as jsonObject).map((key) =>
-      useJsonNode(
-        {
-          value: (props.value as jsonObject)[key],
-          nodeKey: key,
-          id: `${props.id}.${key}`,
-          level: props.level + 1,
-        },
-        renderTypeDefs,
-      ),
-    );
-  } else {
-    return { ...props, degree: 0, isLeaf: true };
-  }
+    Object.keys(props.value as jsonObject).map((key) => {
+      useChildNodePropsArray.push({
+        value: (props.value as jsonObject)[key],
+        nodeKey: key,
+        id: `${props.id}.${key}`,
+      })
+    })
+  } 
+
+  const children: jsonNodeProps<jsonNode>[] = useChildNodePropsArray.map((childNodeProps) => 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useJsonNode(
+      {
+      ...childNodeProps,
+      level: props.level + 1,
+    }, renderTypeDefs
+  ))
+
+
+
+  // let children: jsonNodeProps<jsonNode>[] = [];
+
+  // if (props.baseType === "array") {
+  //   children = (props.value as jsonArray).map((child, index) =>
+  //     useJsonNode(
+  //       {
+  //         value: child,
+  //         nodeKey: index.toString(),
+  //         id: `${props.id}.${index.toString()}`,
+  //         level: props.level + 1,
+  //       },
+  //       renderTypeDefs,
+  //     ),
+  //   );
+  // } else if (props.baseType === "object") {
+  //   children = Object.keys(props.value as jsonObject).map((key) =>
+  //     useJsonNode(
+  //       {
+  //         value: (props.value as jsonObject)[key],
+  //         nodeKey: key,
+  //         id: `${props.id}.${key}`,
+  //         level: props.level + 1,
+  //       },
+  //       renderTypeDefs,
+  //     ),
+  //   );
+  // } else {
+  //   return { ...props, degree: 0, isLeaf: true };
+  // }
 
   const isLeaf = useMemo(
-    () =>
-      renderTypeDefs.renderType(props.renderType).isLeaf === true
-        ? true : false,
-    [props.value, props.renderType, renderTypeDefs],
+    () => !!(renderTypeDefs.renderType(props.renderType).isLeaf === true),
+    [props.renderType, renderTypeDefs],
   );
 
   const foldAllSubBranches = () => {
@@ -131,7 +157,7 @@ const useInternalNode = <TNode extends jsonNode>(
   const foldBranch = () => {
     foldAllSubBranches();
     if (!folded) {
-      setFolded((_prev) => true);
+      setFolded(() => true);
     }
   };
 
@@ -145,7 +171,7 @@ const useInternalNode = <TNode extends jsonNode>(
 
   const unfoldBranch = () => {
     if (folded) {
-      setFolded((_prev) => false);
+      setFolded(() => false);
     }
     unfoldAllSubBranches();
   };

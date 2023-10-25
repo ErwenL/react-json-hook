@@ -4,7 +4,6 @@ import {
   jsonArray,
   jsonObject,
   nodeBaseType,
-  useJsonNodeProps,
   jsonNodeProps,
   jsonNodeRender,
   jsonKeyRender,
@@ -35,7 +34,8 @@ export function createRenderTypeHelper(
       return {
         name: baseType,
         baseType: (baseType as nodeBaseType<TNode>),
-        isType: (_nodeprops: useJsonNodeProps<TNode>) => true,
+        isLeaf: true,
+        isType: () => true,
         getRenderPropsArray: (nodeprops:jsonNodeProps<TNode>) => [nodeprops],
         nodeRender: (nodeProps: renderJsonNodeProps<TNode>) => nodeRender({
           renderJsonValue: props.valueRender,
@@ -52,7 +52,8 @@ export function createRenderTypeHelper(
       return {
         name: baseType,
         baseType: (baseType as nodeBaseType<TNode>),
-        isType: (_nodeprops: useJsonNodeProps<TNode>) => true,
+        isLeaf: false,
+        isType: () => true,
         getRenderPropsArray: (nodeprops:jsonNodeProps<TNode>) => {
           const propsArray: jsonNodeProps[] = []
           propsArray.push(nodeprops)

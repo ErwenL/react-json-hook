@@ -9,5 +9,5 @@ export default defineConfig({
   optimizeDeps: {
     include: ['react', 'react-dom'],
   },
-  plugins: [react()],
+  plugins: [react()]
 })
