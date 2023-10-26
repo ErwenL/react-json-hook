@@ -6,8 +6,8 @@ import {
   useJsonNodeProps,
   useJsonNodePropsWithType,
   jsonNodeProps,
-} from "../types";
-import { RenderTypeDefs } from "../typeHelper";
+} from "./types";
+import { RenderTypeDefs } from "./typeHelper";
 // import { useCallback, useMemo, useState } from "react";
 import React from "react";
 
@@ -36,7 +36,15 @@ const useRenderTypeDefs = <TNode extends jsonNode>(
   props: useJsonNodeProps<TNode>,
   renderTypeDefs: RenderTypeDefs,
 ): useJsonNodePropsWithType<TNode> => {
+  // const baseType = getJsonNodeBaseType(props.value);
   const baseType = React.useMemo(() => getJsonNodeBaseType(props.value), [props]);
+
+  // const validRenderTypes: string[] = [];
+  // renderTypeDefs.withBaseType(baseType).forEach((typeDef) => {
+  //   if (typeDef.isType(props)) {
+  //     validRenderTypes.push(typeDef.name);
+  //   }
+  // });
 
   const validRenderTypes = React.useMemo(() => {
     const _validRenderTypes: string[] = [];
@@ -48,7 +56,16 @@ const useRenderTypeDefs = <TNode extends jsonNode>(
     return _validRenderTypes;
   }, [baseType, props, renderTypeDefs]);
 
-  const [renderType, setRenderType] = React.useState<string>(validRenderTypes[0]);
+  const [renderType, setRenderType] = React.useState<string>(
+    validRenderTypes[0],
+  );
+
+  // const isLeaf = !!(renderTypeDefs.renderType(renderType).isLeaf === true);
+
+  const isLeaf = React.useMemo(
+    () => !!(renderTypeDefs.renderType(renderType).isLeaf === true),
+    [renderType, renderTypeDefs],
+  );
 
   const cycleRenderType =
     validRenderTypes.length > 1
@@ -67,6 +84,7 @@ const useRenderTypeDefs = <TNode extends jsonNode>(
     renderType,
     setRenderType,
     cycleRenderType,
+    isLeaf,
   };
 };
 
@@ -107,46 +125,48 @@ const useInternalNode = <TNode extends jsonNode>(
       useJsonNode(childNodeProps, renderTypeDefs),
   );
 
-  const isLeaf = React.useMemo(
-    () => !!(renderTypeDefs.renderType(props.renderType).isLeaf === true),
-    [props.renderType, renderTypeDefs],
-  );
+  const foldAllSubBranches = props.isLeaf
+    ? undefined
+    : () => {
+        children.forEach((child) => {
+          if (!child.isLeaf && typeof child.foldBranch === "function") {
+            child.foldBranch();
+          }
+        });
+      };
 
-  const foldAllSubBranches = !isLeaf ? () => {
-    children.forEach((child) => {
-      if (!child.isLeaf && typeof child.foldBranch === "function") {
-        child.foldBranch();
-      }
-    });
-  } : undefined;
+  const foldBranch = props.isLeaf
+    ? undefined
+    : () => {
+        foldAllSubBranches!();
+        if (!folded) {
+          setFolded(() => true);
+        }
+      };
 
-  const foldBranch = !isLeaf ? () => {
-    foldAllSubBranches!();
-    if (!folded) {
-      setFolded(() => true);
-    }
-  } : undefined ;
+  const unfoldAllSubBranches = props.isLeaf
+    ? undefined
+    : () => {
+        children.forEach((child) => {
+          if (!child.isLeaf && typeof child.unfoldBranch === "function") {
+            child.unfoldBranch();
+          }
+        });
+      };
 
-  const unfoldAllSubBranches = !isLeaf ? () => {
-    children.forEach((child) => {
-      if (!child.isLeaf && typeof child.unfoldBranch === "function") {
-        child.unfoldBranch();
-      }
-    });
-  } : undefined;
-
-  const unfoldBranch = !isLeaf ? () => {
-    if (folded) {
-      setFolded(() => false);
-    }
-    unfoldAllSubBranches!();
-  } : undefined;
+  const unfoldBranch = props.isLeaf
+    ? undefined
+    : () => {
+        if (folded) {
+          setFolded(() => false);
+        }
+        unfoldAllSubBranches!();
+      };
 
   return {
     ...props,
     children,
     degree: children.length,
-    isLeaf,
     folded,
     setFolded,
     toggleFolded,

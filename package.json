@@ -3,9 +3,17 @@
   "description": "An exceptionally customizable headless React hook component for crafting JSON viewers.",
   "version": "0.5.0",
   "author": "Erwen Li <erwenlovelife@outlook.com>",
-  "main": "dist/index.js",
+  "main": ".dist/react-json-hook.umd.js",
+  "module": "./dist/react-json-hook.es.js",
   "types": "./dist/index.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/react-json-hook.es.js",
+      "require": "./dist/react-json-hook.umd.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -14,8 +22,7 @@
     "preview": "vite preview --outDir demos/dist"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^18.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.8.7",
@@ -31,13 +38,16 @@
     "postcss": "^8.4.31",
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.6",
+    "react-dom": "^18.2.0",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
     "vite-plugin-dts": "^3.6.0"
   },
   "license": "MIT",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/ErwenL/react-json-hook.git"

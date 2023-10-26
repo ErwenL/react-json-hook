@@ -36,6 +36,7 @@ export interface useJsonNodePropsWithType<TNode extends jsonNode> extends useJso
   renderType: string;
   setRenderType: (x: string) => void;
   cycleRenderType?: () => void;
+  isLeaf: boolean;
 }
 export interface jsonNodeProps<TNode extends jsonNode = jsonNode> extends useJsonNodeProps<TNode> {
   baseType?: nodeBaseType<TNode>;
@@ -58,7 +59,6 @@ export interface jsonNodeProps<TNode extends jsonNode = jsonNode> extends useJso
 
 // render node types
 export interface renderJsonNodeProps<TNode extends jsonNode> extends jsonNodeProps<TNode> {
-  // renderJsonValue?: jsonValueRender<TNode> | jsonValueRender<any>; // have to use any here to avoid type error
   renderJsonValue?: jsonValueRender<TNode>; 
   renderJsonKey?: jsonKeyRender<TNode>;
 }
@@ -73,7 +73,7 @@ export type jsonNodeRender<TNode extends jsonNode> = React.FC<renderJsonNodeProp
 export interface renderTypeDef<TNode extends jsonNode> {
   name: string;
   baseType: nodeBaseType<TNode>;
-  isLeaf?: boolean;
+  isLeaf: boolean;
   isType: <TProps extends useJsonNodeProps<TNode> >(props: TProps) => boolean; 
   getEndNodeProps?: <TProps extends jsonNodeProps<TNode> >(props: TProps) => jsonNodeProps;
   getRenderPropsArray: <TProps extends jsonNodeProps<TNode> >(props: TProps) => jsonNodeProps[];
