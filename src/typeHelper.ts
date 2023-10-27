@@ -39,7 +39,7 @@ export function createRenderTypeHelper(
         getRenderPropsArray: (nodeprops:jsonNodeProps<TNode>) => [nodeprops],
         nodeRender: (nodeProps: renderJsonNodeProps<TNode>) => nodeRender({
           renderJsonValue: props.valueRender,
-          renderJsonKey: props.keyRender? props.keyRender: keyRender,
+          renderJsonKey: props.keyRender || keyRender,
           ...nodeProps, 
         }),
         ...props
@@ -67,7 +67,7 @@ export function createRenderTypeHelper(
         },
         nodeRender: (nodeProps: renderJsonNodeProps<TNode>) => nodeRender({
           renderJsonValue: props.valueRender,
-          renderJsonKey: props.keyRender? props.keyRender: keyRender,
+          renderJsonKey: props.keyRender || keyRender,
           ...nodeProps, 
         }),
         ...props

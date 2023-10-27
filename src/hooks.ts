@@ -1,3 +1,4 @@
+import { useCallback, useMemo, useState } from "react";
 import {
   jsonNode,
   jsonArray,
@@ -8,8 +9,6 @@ import {
   jsonNodeProps,
 } from "./types";
 import { RenderTypeDefs } from "./typeHelper";
-// import { useCallback, useMemo, useState } from "react";
-import React from "react";
 
 export const useJson = <T extends jsonNode = jsonNode>(
   value: T,
@@ -23,7 +22,7 @@ export const useJsonNode = <TNode extends jsonNode>(
 ): jsonNodeProps<TNode> => {
   const propsWidthType = useRenderTypeDefs(props, renderTypeDefs);
   const _props = useInternalNode(propsWidthType, renderTypeDefs);
-  _props.renderPropsArray = React.useCallback(
+  _props.renderPropsArray = useCallback(
     () =>
       renderTypeDefs.renderType(_props.renderType).getRenderPropsArray(_props),
     [_props, renderTypeDefs],
@@ -36,17 +35,9 @@ const useRenderTypeDefs = <TNode extends jsonNode>(
   props: useJsonNodeProps<TNode>,
   renderTypeDefs: RenderTypeDefs,
 ): useJsonNodePropsWithType<TNode> => {
-  // const baseType = getJsonNodeBaseType(props.value);
-  const baseType = React.useMemo(() => getJsonNodeBaseType(props.value), [props]);
+  const baseType = useMemo(() => getJsonNodeBaseType(props.value), [props]);
 
-  // const validRenderTypes: string[] = [];
-  // renderTypeDefs.withBaseType(baseType).forEach((typeDef) => {
-  //   if (typeDef.isType(props)) {
-  //     validRenderTypes.push(typeDef.name);
-  //   }
-  // });
-
-  const validRenderTypes = React.useMemo(() => {
+  const validRenderTypes = useMemo(() => {
     const _validRenderTypes: string[] = [];
     renderTypeDefs.withBaseType(baseType).forEach((typeDef) => {
       if (typeDef.isType(props)) {
@@ -56,13 +47,9 @@ const useRenderTypeDefs = <TNode extends jsonNode>(
     return _validRenderTypes;
   }, [baseType, props, renderTypeDefs]);
 
-  const [renderType, setRenderType] = React.useState<string>(
-    validRenderTypes[0],
-  );
+  const [renderType, setRenderType] = useState<string>(validRenderTypes[0]);
 
-  // const isLeaf = !!(renderTypeDefs.renderType(renderType).isLeaf === true);
-
-  const isLeaf = React.useMemo(
+  const isLeaf = useMemo(
     () => !!(renderTypeDefs.renderType(renderType).isLeaf === true),
     [renderType, renderTypeDefs],
   );
@@ -92,7 +79,7 @@ const useInternalNode = <TNode extends jsonNode>(
   props: useJsonNodePropsWithType<TNode>,
   renderTypeDefs: RenderTypeDefs,
 ): jsonNodeProps<TNode> => {
-  const [folded, setFolded] = React.useState<boolean>(true);
+  const [folded, setFolded] = useState<boolean>(true);
   const toggleFolded = () => {
     setFolded((prev) => !prev);
   };
