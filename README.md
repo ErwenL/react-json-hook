@@ -1,6 +1,14 @@
 # React-Json-Hook
 
+
+
 ## Key Features
+
+- [x] Customizable rendering components
+- [x] User-defined render type
+- [x] Large data (virtualization) 
+
+## Examples
 
 ## Motivation
 
