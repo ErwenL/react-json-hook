@@ -55,5 +55,17 @@
     "type": "git",
     "url": "https://github.com/ErwenL/react-json-hook.git"
   },
-  "homepage": "https://erwenl.github.io/react-json-hook"
+  "homepage": "https://erwenl.github.io/react-json-hook",
+  "keywords": [
+    "react",
+    "react-hook",
+    "hook",
+    "component",
+    "interactive",
+    "json",
+    "viewer",
+    "json-viewer",
+    "json-display",
+    "json-tree"
+  ]
 }
