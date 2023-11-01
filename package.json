@@ -18,8 +18,8 @@
     "dev": "vite",
     "build": "vite build",
     "build:demo": "vite build --config vite.demo-config.ts",
-    "predeploy": "npm run build:demo",
-    "deploy": "gh-pages -d demos/dist",
+    "predeploy": "npm run build --config vite.gh-pages-config.ts",
+    "deploy": "gh-pages -d build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview --outDir demos/dist"
   },
