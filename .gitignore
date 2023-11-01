@@ -12,6 +12,7 @@ dist
 dist-ssr
 types
 *.local
+build
 
 # lock
 bun.lockb

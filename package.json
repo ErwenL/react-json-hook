@@ -19,7 +19,7 @@
     "build": "vite build",
     "build:demo": "vite build --config vite.demo-config.ts",
     "predeploy": "vite build --config vite.gh-pages-config.ts",
-    "deploy": "gh-pages -d dist",
+    "deploy": "gh-pages -d build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview --outDir demos/dist"
   },
@@ -32,7 +32,6 @@
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
-    "@vitejs/plugin-react": "^4.1.0",
     "@vitejs/plugin-react-swc": "^3.3.2",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.45.0",
