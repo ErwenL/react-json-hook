@@ -18,6 +18,8 @@
     "dev": "vite",
     "build": "vite build",
     "build:demo": "vite build --config vite.demo-config.ts",
+    "predeploy": "npm run build:demo",
+    "deploy": "gh-pages -d demos/dist",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview --outDir demos/dist"
   },
@@ -35,6 +37,7 @@
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "gh-pages": "^6.0.0",
     "postcss": "^8.4.31",
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.6",
@@ -51,5 +54,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ErwenL/react-json-hook.git"
-  }
+  },
+  "homepage": "https://erwenl.github.io/react-json-hook"
 }

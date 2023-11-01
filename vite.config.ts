@@ -10,8 +10,6 @@ export default defineConfig({
       formats: ["es", "umd"],
       name: "ReactJsonHook",
       fileName: (format) => `react-json-hook.${format}.js`
-      // entry: {index: resolve(__dirname, "./src/index.ts")},
-      // formats: ["es"],
     },
     rollupOptions: {
       external: ['react'],
