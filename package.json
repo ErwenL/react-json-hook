@@ -1,6 +1,6 @@
 {
   "name": "react-json-hook",
-  "description": "An exceptionally customizable headless React hook component for crafting JSON viewers.",
+  "description": "A customizable headless React hook component for creating JSON viewers.",
   "version": "0.5.0",
   "author": "Erwen Li <erwenlovelife@outlook.com>",
   "main": ".dist/react-json-hook.umd.js",
