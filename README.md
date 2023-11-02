@@ -1,6 +1,6 @@
 # React-Json-Hook
 
-RJH provides a react Hook function `useJson` for creating JSON object viewer. Additionally, RJH offers a `renderTypeDefs` class, inspired by TanStack Table's `ColumnDef`, which empowers you to define custom data types beyond the standard JSON type, and provides the flexibility to customize the rendering of various data types.
+RJH provides a react Hook function `useJson` for creating JSON object viewer. Additionally, RJH offers a `renderTypeDefs` class, inspired by [TanStack Table](https://tanstack.com/table/v8/docs/guide/column-defs)'s `ColumnDef`, which empowers you to define custom data types beyond the standard JSON type, and provides the flexibility to customize the rendering of various data types.
 
 ## Key Features
 
@@ -9,6 +9,14 @@ RJH provides a react Hook function `useJson` for creating JSON object viewer. Ad
 - [x] Large data (virtualization)
 
 ## Examples
+
+- [Demo👀](https://erwenl.github.io/react-json-hook/)
+
+## TODO
+
+- [ ] complete demo site
+- [ ] clear browser and type errors and warnings
+- [ ] add more features
 
 ## Motivation
 
